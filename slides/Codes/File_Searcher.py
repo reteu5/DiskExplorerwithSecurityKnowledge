@@ -44,7 +44,7 @@ if __name__ == "__main__":
         print(GETDRIVE)
 
     CurrentDriver = input("위 드라이버 중에 선택하세요 (드라이브 이름과 반드시 동일하게 이름 작성) : ")
-    searchDirList = [CurrentDriver + ':\\']  # 중요 변수! 검색한 폴더 목록의 스택
+    searchDirList = [CurrentDriver + ':\\']  
     currentDir = CurrentDriver + ':\\'
 
     window = Tk()
