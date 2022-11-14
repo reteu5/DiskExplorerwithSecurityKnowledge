@@ -5,29 +5,31 @@
 파이팅!
 
 ## 1. 1차적으로 구현 완료된 기능
+ -- * [[File_Searcher.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/File_Searcher.py)] --
+
  * 드라이브 볼륨 [[mountpoint @ Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py#:~:text=for%20drive%20in%20GetDrive,i%20in%20diskIO%3A)]
  * 드라이브 포맷 [[fstype @ Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py#:~:text=for%20drive%20in%20GetDrive,i%20in%20diskIO%3A)]
  * rw 권한 및 이동식 디스크 여부 확인 [[opts @ Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
- * maxfile
+ * maxfile [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
    * 어떻게 읽어야되는지 모르겠음
- * maxpath 
+ * maxpath [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
    * 어떻게 읽어야 되는지 모르겠음
- * 총 저장공간
- * 사용한 저장공간
- * 가용 저장공간
+ * 총 저장공간 [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
+ * 사용한 저장공간 [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
+ * 가용 저장공간 [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
  
  ## 2. 확인이 필요한 기능
- * Rate of Usage 
+ * Rate of Usage [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
    * 저장공간 사용률을 나타낸 거라면 버그가 있는 것 같고, 디스크 로드율을 말하는거라면 확인 필요
- * read_count 
+ * read_count [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
    * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
- * write_count 
+ * write_count [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
    * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
- * read_bytes 
+ * read_bytes [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
    * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
- * write_bytes 
+ * write_bytes [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
    * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
- * read_time  
+ * read_time [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
    * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
- * write_time  
+ * write_time [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
    * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
