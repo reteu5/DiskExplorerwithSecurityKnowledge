@@ -10,11 +10,7 @@ class Device():
         self.device_name = device_name
         self.info = {}
         self.results = []
-    
-    def get_device_info(self):
-        attributes = []
-        values = []
-        
+
         cmd = 'smartctl -a ' + self.device_name
         
         data = os.popen(cmd).read()
@@ -34,8 +30,6 @@ class Device():
                 temp = l.split(':')
                 self.info[temp[0]] = temp[-1].lstrip()
 
-                attributes.append(temp[0])
-                values.append(self.info[temp[0]])
                 #print(temp[0]+': '+self.info[temp[0]])
                 
             elif l == '=== START OF INFORMATION SECTION ===':
@@ -43,8 +37,14 @@ class Device():
             
             elif l == '=== START OF SMART DATA SECTION ===':
                 record = 2
+    
+    def get_device_info(self, key):
+        try:
+            result = self.info[key]
+        except KeyError:
+            result = "-"
+        return result
         
-        return attributes, values
                
 def get_device_name():
     cmd = 'smartctl --scan'
@@ -64,5 +64,6 @@ if __name__ == '__main__':
         device.append(Device(dev))
     
     for dev in device:
-        dev.get_device_info()
+        print(dev.get_device_info("Serial Number"))
+        print(dev.get_device_info("Power Cycles"))
     
