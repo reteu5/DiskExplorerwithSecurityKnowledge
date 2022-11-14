@@ -29,8 +29,6 @@ device = []
 for dev in device_name_list:
     device.append(Device(dev))
 
-
-
 def changeDirToC(event=None):
     disk.set("C:")
     model_num.set(device[0].get_device_info("Model Number"))
@@ -61,36 +59,11 @@ def changeDirToD(event=None):
     power_hours.set(device[1].get_device_info("Power On Hours"))
     cycles.set(device[1].get_device_info("Power Cycles"))
 
-
 def close():
     root.quit()
     root.destroy()
 
 menubar=Menu(root)
-
-menu_1=Menu(menubar, tearoff=0)
-menu_1.add_command(label="C드라이브", command=changeDirToC)
-menu_1.add_command(label="D드라이브", command=changeDirToD)
-menu_1.add_separator()
-menu_1.add_command(label="하위 메뉴 1-3", command=close)
-menubar.add_cascade(label="파일", menu=menu_1)
-
-menu_2=Menu(menubar, tearoff=0, selectcolor="red")
-menu_2.add_radiobutton(label="하위 메뉴 2-1", state="disable")
-menu_2.add_radiobutton(label="하위 메뉴 2-2")
-menu_2.add_radiobutton(label="하위 메뉴 2-3")
-menubar.add_cascade(label="보기", menu=menu_2)
-
-menu_3=Menu(menubar, tearoff=0)
-menu_3.add_checkbutton(label="하위 메뉴 3-1")
-menu_3.add_checkbutton(label="하위 메뉴 3-2")
-menubar.add_cascade(label="도구", menu=menu_3)
-
-menu_4=Menu(menubar, tearoff=0)
-menubar.add_cascade(label="도움말", menu=menu_4)
-
-root.config(menu=menubar)
-
 
 
 # match (attribute - value)
@@ -156,10 +129,13 @@ cycles = StringVar(
 )
 
 font_title = Font(family="나눔 고딕",size = 20,weight='bold')
-title_frame = Frame(root, relief='solid', width = 700, height = 20)
+title_frame = Frame(root, relief='solid', width = 400, height = 20)
 title_frame.grid(column=0, row=0)
-main_frame = Frame(root, relief='solid', width = 700, height = 300)
+main_frame = Frame(root, relief='solid', width = 400, height = 300)
 main_frame.grid(column=0, row=1)
+explorer_frame = Frame(root, relief='solid', width = 100, height = 300, bg="Yellow")
+explorer_frame.grid(column=1, row=0, rowspan=2)
+
 
 label1=Label(title_frame, textvariable=disk, font=font_title, anchor="e")
 label1.grid(column=0, row=0)
@@ -218,7 +194,103 @@ var11.grid(column=1, row=11)
 
 
 
+# file explorer
+
+def pathChange(*event):
+    # Get all Files and Folders from the given Directory
+    directory = os.listdir(currentPath.get())
+    # Clearing the list
+    list.delete(0, END)
+    # Inserting the files and directories into the list
+    for file in directory:
+        list.insert(0, file)
+
+def changePathByClick(event=None):
+    # Get clicked item.
+    picked = list.get(list.curselection()[0])
+    # get the complete path by joining the current path with the picked item
+    path = os.path.join(currentPath.get(), picked)
+    # Check if item is file, then open it
+    if os.path.isfile(path):
+        print('Opening: '+path)
+        os.startfile(path)
+    # Set new path, will trigger pathChange function.
+    else:
+        currentPath.set(path)
+
+def goBack(event=None):
+    # get the new path
+    newPath = pathlib.Path(currentPath.get()).parent
+    # set it to currentPath
+    currentPath.set(newPath)
+    # simple message
+    print('Going Back')
+
+def open_popup():
+    global top
+    top = Toplevel(explorer_frame)
+    top.geometry("250x150")
+    top.resizable(False, False)
+    top.title("Child Window")
+    top.columnconfigure(0, weight=1)
+    Label(top, text='Enter File or Folder name').grid()
+    Entry(top, textvariable=newFileName).grid(column=0, pady=10, sticky='NSEW')
+    Button(top, text="Create", command=newFileOrFolder).grid(pady=10, sticky='NSEW')
+
+def newFileOrFolder():
+    # check if it is a file name or a folder
+    if len(newFileName.get().split('.')) != 1:
+        open(os.path.join(currentPath.get(), newFileName.get()), 'w').close()
+    else:
+        os.mkdir(os.path.join(currentPath.get(), newFileName.get()))
+    # destroy the top
+    top.destroy()
+    pathChange()
+
+top = ''
+
+# String variables
+newFileName = StringVar(explorer_frame, "File.dot", 'new_name')
+currentPath = StringVar(
+    explorer_frame,
+    name='currentPath',
+    value=pathlib.Path.cwd()
+)
+# Bind changes in this variable to the pathChange function
+currentPath.trace('w', pathChange)
+
+Button(explorer_frame, text='Folder Up', command=goBack).grid(
+    sticky='NSEW', column=0, row=0
+)
+# Keyboard shortcut for going up
+root.bind("<Alt-Up>", goBack)
+Entry(explorer_frame, textvariable=currentPath).grid(
+    sticky='NSEW', column=1, row=0, ipady=10, ipadx=10
+)
+
+# List of files and folder
+list = Listbox(explorer_frame, width = 70)
+list.grid(sticky='NSEW', column=1, row=1, ipady=10, ipadx=10)
+
+# List Accelerators
+list.bind('<Double-1>', changePathByClick)
+list.bind('<Return>', changePathByClick)
+
+# Menu
+menubar = Menu(root)
+# change directory
+menubar.add_command(label="C: drive", command=changeDirToC)
+menubar.add_command(label="D: drive", command=changeDirToD)
+# Adding a new File button
+menubar.add_command(label="Add File or Folder", command=open_popup)
+# Adding a quit button to the Menubar
+menubar.add_command(label="Quit", command=root.quit)
+# Make the menubar the Main Menu
+root.config(menu=menubar)
+
+
 changeDirToC()
+pathChange('')
 
 # run the main program
 root.mainloop()
