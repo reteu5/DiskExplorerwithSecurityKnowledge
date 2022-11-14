@@ -3,3 +3,31 @@
 분담 전까지는 같은 기능 구현에 여러 사람이 들어가는 일이 없도록 코드에 변경 사항이 있을 경우 바로바로 커밋해주시면 감사드리겠습니다요.
 
 파이팅!
+
+## 1. 1차적으로 구현 완료된 기능
+ * 드라이브 볼륨 [[mountpoint @ Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py#:~:text=for%20drive%20in%20GetDrive,i%20in%20diskIO%3A)]
+ * 드라이브 포맷 [[fstype @ Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py#:~:text=for%20drive%20in%20GetDrive,i%20in%20diskIO%3A)]
+ * rw 권한 및 이동식 디스크 여부 확인 [[opts @ Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
+ * maxfile
+   * 어떻게 읽어야되는지 모르겠음
+ * maxpath 
+   * 어떻게 읽어야 되는지 모르겠음
+ * 총 저장공간
+ * 사용한 저장공간
+ * 가용 저장공간
+ 
+ ## 2. 확인이 필요한 기능
+ * Rate of Usage 
+   * 저장공간 사용률을 나타낸 거라면 버그가 있는 것 같고, 디스크 로드율을 말하는거라면 확인 필요
+ * read_count 
+   * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
+ * write_count 
+   * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
+ * read_bytes 
+   * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
+ * write_bytes 
+   * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
+ * read_time  
+   * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
+ * write_time  
+   * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
