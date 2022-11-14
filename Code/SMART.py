@@ -12,6 +12,8 @@ class Device():
         self.results = []
     
     def get_device_info(self):
+        attributes = []
+        values = []
         
         cmd = 'smartctl -a ' + self.device_name
         
@@ -31,13 +33,18 @@ class Device():
             if record == 1 or record == 2:
                 temp = l.split(':')
                 self.info[temp[0]] = temp[-1].lstrip()
-                print(temp[0]+': '+self.info[temp[0]])
+
+                attributes.append(temp[0])
+                values.append(self.info[temp[0]])
+                #print(temp[0]+': '+self.info[temp[0]])
                 
             elif l == '=== START OF INFORMATION SECTION ===':
                 record = 1
             
             elif l == '=== START OF SMART DATA SECTION ===':
                 record = 2
+        
+        return attributes, values
                
 def get_device_name():
     cmd = 'smartctl --scan'
@@ -58,4 +65,4 @@ if __name__ == '__main__':
     
     for dev in device:
         dev.get_device_info()
-        
+    
