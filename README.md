@@ -23,17 +23,6 @@
  * 가용 저장공간 [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
  
  ## 3. 확인이 필요한 기능
- * Rate of Usage [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
-   * 저장공간 사용률을 나타낸 거라면 버그가 있는 것 같고, 디스크 로드율을 말하는거라면 확인 필요
- * read_count [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
-   * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
- * write_count [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
-   * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
- * read_bytes [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
-   * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
- * write_bytes [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
-   * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
- * read_time [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
-   * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
- * write_time [[Get_Disk_Information.py](https://github.com/reteu5/DiskExplorerwithSecurityKnowledge/blob/main/Code/Get_Disk_Information.py)]
-   * C 드라이브 기준으로만 계산이 되는 것 같은데 확인 필요
+* C드라이브로만 되는 버그 수정. disk_io_counters의 값이 False일 때 총 드라이브 값을 사용하기 때문에 발생한 문제
+   * 접근할 때 하드코딩으로 해결했기에 네트워크 드라이브 등 dictionary의 key값에 따라 에러가 날 가능성 있습니다
+
