@@ -2,6 +2,7 @@ from tkinter import *
 import os
 import ctypes
 import pathlib
+import stat
 from SMART import *
 from tkinter.font import *
 
@@ -18,7 +19,7 @@ root.grid_columnconfigure(1, weight=1)
 root.grid_rowconfigure(1, weight=1)
 
 # set a window
-root.geometry("1280x800+100+100")
+root.geometry("2760x720+100+100")           # 1280x800+100+100
 root.resizable(True, True)
 
 
@@ -201,9 +202,20 @@ def pathChange(*event):
     directory = os.listdir(currentPath.get())
     # Clearing the list
     list.delete(0, END)
-    # Inserting the files and directories into the list
+    # Inserting the files and directories into the list         읽어온 파일들에 대해 적용하는 for문 
+    count = 0
     for file in directory:
-        list.insert(0, file)
+        list.insert("end", file) # 목록의 마지막에 이어 붙이기. // 원본 : list.insert(0, file)
+    
+    for file in directory:
+                # 만약 파일의 숨김 속성('h')이 1이라면 하이라이트 처리.
+        if(has_hidden_attribute(file) == 1) :
+            print("FOUND_A_HIDDEN_FILE!!!! HOORAY!!!!!!__________123412341234123412341234==========1234123412341234")
+            list.itemconfig(count, {'bg' : 'khaki1'})
+        count += 1
+        
+def has_hidden_attribute(filepath):
+    return bool(os.stat(filepath).st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN)
 
 def changePathByClick(event=None):
     # Get clicked item.
