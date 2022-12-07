@@ -3,6 +3,7 @@ import os
 import ctypes
 import pathlib
 import stat
+import subprocess
 from SMART import *
 from tkinter.font import *
 
@@ -198,25 +199,53 @@ var11.grid(column=1, row=11)
 # file explorer
 
 def pathChange(*event):
+    print("path changed to "+str(currentPath.get()))
     # Get all Files and Folders from the given Directory
     directory = os.listdir(currentPath.get())
     # Clearing the list
     list.delete(0, END)
-    # Inserting the files and directories into the list         읽어온 파일들에 대해 적용하는 for문 
+    # Inserting the files and directories into the list
     count = 0
     for file in directory:
-        list.insert("end", file) # 목록의 마지막에 이어 붙이기. // 원본 : list.insert(0, file)
-    
+        list.insert("end", file) # end : 목록의 마지막에 이어 붙이기. // 원본 : list.insert(0, file)
+                    
+    # 만약 파일의 숨김 속성('h')이 1이라면 listbox 상에서 하이라이트 처리.
+    # 프로그램 처음 실행시에는 정상적으로 작동하는데, 경로를 이동하면 함수 자체는 거치는데 하이라이트가 안되는 현상 발생. 버그 수정 필요합니다.
+    # 프로그램 처음 실행시에는 정상적으로 작동하는데, 경로를 이동하면 함수 자체는 거치는데 하이라이트가 안되는 현상 발생. 버그 수정 필요합니다.
+    # 프로그램 처음 실행시에는 정상적으로 작동하는데, 경로를 이동하면 함수 자체는 거치는데 하이라이트가 안되는 현상 발생. 버그 수정 필요합니다.
     for file in directory:
-                # 만약 파일의 숨김 속성('h')이 1이라면 하이라이트 처리.
         if(has_hidden_attribute(file) == 1) :
-            print("FOUND_A_HIDDEN_FILE!!!! HOORAY!!!!!!__________123412341234123412341234==========1234123412341234")
+            print("Found a hidden one     @ " + str(count))
+            # print("FOUND_A_HIDDEN_FILE!!!! HOORAY!!!!!!__________123412341234123412341234==========1234123412341234")
             list.itemconfig(count, {'bg' : 'khaki1'})
+        print(count)
         count += 1
         
 def has_hidden_attribute(filepath):
-    return bool(os.stat(filepath).st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN)
+    # 원본 코드(아래 코드가 작동 안 할 경우 이걸로 교체) : return bool(os.stat(filepath).st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN)
+    try:
+        attrs = ctypes.windll.kernel32.GetFileAttributesW(filepath)
+        assert attrs != -1
+        result = bool(attrs & 2)
+    except (AttributeError, AssertionError):
+        result = False
+    return result
 
+def file_magician():
+    picked = list.get(list.curselection()[0])
+    if(has_hidden_attribute(picked) == 1) :
+        show_file(picked)
+        print("Selected file is now being shown.")
+    else :
+        hide_file(picked)
+        print("Selected file is now hidden.")
+        
+def hide_file(filepath):
+    subprocess.check_call(["attrib", "+H", filepath])
+    
+def show_file(filepath):
+    subprocess.check_call(["attrib", "-H", filepath])
+    
 def changePathByClick(event=None):
     # Get clicked item.
     picked = list.get(list.curselection()[0])
@@ -231,9 +260,9 @@ def changePathByClick(event=None):
         currentPath.set(path)
 
 def goBack(event=None):
-    # get the new path
+    # get the new path      // 부모 경로를 newPath에 할당
     newPath = pathlib.Path(currentPath.get()).parent
-    # set it to currentPath
+    # set it to currentPath // newPath를 리스트에 띄우기 위해 set 처리
     currentPath.set(newPath)
     # simple message
     print('Going Back')
@@ -295,6 +324,7 @@ menubar.add_command(label="C: drive", command=changeDirToC)
 menubar.add_command(label="D: drive", command=changeDirToD)
 # Adding a new File button
 menubar.add_command(label="Add File or Folder", command=open_popup)
+menubar.add_command(label="(un)Hide File", command=file_magician)
 # Adding a quit button to the Menubar
 menubar.add_command(label="Quit", command=root.quit)
 # Make the menubar the Main Menu
