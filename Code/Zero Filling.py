@@ -12,7 +12,7 @@ args = parser.parse_args()
 total, used, free = shutil.disk_usage(args.basepath)    
 
 # 바이트 배열 생성
-buff = bytearray(1048576*100)
+buff = bytearray(4000000000000*100)
 
 tempdir = os.path.join(args.basepath, f"files_tmp")
 if not os.path.exists(tempdir): os.makedirs(tempdir)
