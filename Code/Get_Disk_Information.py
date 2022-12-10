@@ -7,7 +7,7 @@ from ctypes import windll
 
 if __name__ == '__main__':
    
-   GetInfromationDrives = psutil.disk_partitions() 
+   GetInfromationDrives = psutil.disk_partitions() #psutil 모듈을 이용하여 
    
    for index in range(len(GetInfromationDrives)):
         Drive = GetInfromationDrives[index]
