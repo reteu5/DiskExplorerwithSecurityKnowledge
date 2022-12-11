@@ -4,7 +4,7 @@ import time
 
 import argparse
 
-parser = argparse.ArgumentParser(description='Zero fills the file system for the purpose of disk imaging and compression')
+parser = argparse.ArgumentParser(description='Zero fills the file system')
 parser.add_argument('basepath', help='basepath is required.')
 args = parser.parse_args()
 
