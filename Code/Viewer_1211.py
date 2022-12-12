@@ -1,6 +1,7 @@
 from tkinter import *
 import os
 import ctypes
+from ctypes import windll
 import pathlib
 import stat
 import subprocess
@@ -13,18 +14,18 @@ from tkinter.font import *
 ctypes.windll.shcore.SetProcessDpiAwareness(True)
 
 root = Tk()
-# set a title
-#root.title('Simple Explorer')
+root.wm_attributes('-transparentcolor', 'grey')
 
-root.grid_columnconfigure(1, weight=1)
-root.grid_rowconfigure(1, weight=1)
+# no title
+root.overrideredirect(True)
 
 # set a window
-root.geometry("1280x720+100+100")           # 1280x800+100+100
-#root.resizable(True, True)
+full_size = "1280x720+100+100"
+root.geometry(full_size)                    # default : 1280x800+100+100
+root.resizable(False, False)                # fixed
 
 
-#smart
+# SMART.py
 device_name_list = get_device_name()
 device = []
 
@@ -48,6 +49,19 @@ def changeDirToC(event=None):
     tmp2 = tmp.split(' ')
     if (tmp2[1] == 'Celsius'):
         temper.set(tmp2[0])
+        print(int(tmp2[0]))
+        if int(tmp2[0]) > 35:
+            temperCel.configure(image=redCel)
+            var5.configure(bg='#FDBB7D')
+        elif int(tmp2[0]) > 30:
+            temperCel.configure(image=yellowCel)
+            var5.configure(bg='#F1F451')
+        elif int(tmp2[0]) < 30:
+            temperCel.configure(image=blueCel)
+            var5.configure(bg='#7DA9FD')
+        else:
+            temperCel.configure(image=grayCel)
+            var5.configure(bg='#CACACA')
     else:
         temper.set('-')
 
@@ -71,14 +85,20 @@ def changeDirToD(event=None):
     tmp2 = tmp.split(' ')
     if (tmp2[1] == 'Celsius'):
         temper.set(tmp2[0])
+        if int(tmp2[0]) > 35:
+            temperCel.configure(image=redCel)
+            var5.configure(bg='#FDBB7D')
+        elif int(tmp2[0]) > 30:
+            temperCel.configure(image=yellowCel)
+            var5.configure(bg='#F1F451')
+        elif int(tmp2[0]) < 30:
+            temperCel.configure(image=blueCel)
+            var5.configure(bg='#7DA9FD')
+        else:
+            temperCel.configure(image=grayCel)
+            var5.configure(bg='#CACACA')
     else:
         temper.set('-')
-
-def close():
-    root.quit()
-    root.destroy()
-
-menubar=Menu(root)
 
 
 # match (attribute - value)
@@ -144,16 +164,36 @@ cycles = StringVar(
 )
 
 
+initx = 0
+inity = 0
+def start_move(event):
+    print(event)
+    initx = event.x
+    inity = event.y
 
+def on_move(event):
+    x = root.winfo_x() + event.x - initx
+    y = root.winfo_y() + event.y - inity
+    root.geometry("+%s+%s" % (x, y))
+
+def stop_move(event):
+    initx = None
+    inity = None
+
+menu_photo = PhotoImage(file='img/menu.png')
+menu_label = Label(root, border=0, bg='grey', image=menu_photo)
+menu_label.pack(fill=BOTH, expand=True)
+
+menu_label.bind("<ButtonPress-1>", start_move)
+menu_label.bind("<ButtonRelease-1>", stop_move)
+menu_label.bind("<B1-Motion>", on_move)
 
 frame_photo = PhotoImage(file='img/frame.png')
-frame_label = Label(root, border=0, bg='white', image=frame_photo)
+frame_label = Label(root, border=0, bg='grey', image=frame_photo)
 frame_label.pack(fill=BOTH, expand=True)
 
 
-# Frame1 : Drive Type + Disk Name
-#frame1 = Frame(root, relief="solid")
-#frame1.place(x=36, y=114, width=583, height=70)
+# : Drive Type + Disk Name
 font1 = Font(family="Inter", weight='bold', size = 24)
 label1=Label(root, textvariable=disk, font=font1, bg='#5E80F8', fg='white')
 label1.place(x=36+18,y=114+21)
@@ -163,57 +203,56 @@ var1=Label(root, textvariable=model_num, font=font3, bg='#BBFFE7')
 var1.place(x=36+84, y=114+21)
 
 
-# Frame2 : Disk Details
+# : Disk Details
 font2 = Font(family="Inter", weight='bold', size = 10)
-#label2=Label(root, text="일련번호 (S/N)")
-#label2.place(x=30, y=5)
+
+# 일련번호 (S/N)
 var2=Label(root, textvariable=serial_num, font=font2, border=0, bg='white')
 var2.place(x=50+152, y=337+5)
 
-#label3=Label(root, text="펌웨어 버전 정보")
-#label3.place(x=30, y=42)
+# 펌웨어 버전 정보
 var3=Label(root, textvariable=firm_ver, font=font2, border=0, bg='white')
 var3.place(x=50+152, y=337+42)
 
-#label4=Label(root, text="NVMe 버젼")
-#label4.place(x=30, y=79)
+# NVMe 버젼
 var4=Label(root, textvariable=nvme_ver, font=font2, border=0, bg='white')
 var4.place(x=50+152, y=337+79)
 
 
 # 온도 : 위험 빨강='#FDBB7D', 평범 파랑='#7DA9FD', 경고 노랑='#F1F451', 알수없음='#CACACA'
-font5 = Font(family="Inter", weight='bold', size = 24)
+blueCel = PhotoImage(file='img/blueCel.png')
+redCel = PhotoImage(file='img/redCel.png')
+yellowCel = PhotoImage(file='img/yellowCel.png')
+grayCel = PhotoImage(file='img/grayCel.png')
+temperCel = Label(root, border=0, bg='#BBFFE7', image=blueCel)
+temperCel.place(x=53, y=233)
+
+font5 = Font(family="Inter", weight='bold', size = 22)
 var5=Label(root, textvariable=temper, font=font5, bg='#FDBB7D', fg='white')
-var5.place(x=53+10, y=223+27)
+var5.place(x=53+7, y=223+27+10)
 
 
-#label6=Label(root, text="총 저장공간")
-#label6.place(x=30, y=116)
+# 총 저장공간
 var6=Label(root, textvariable=total_cap, font=font2, border=0, bg='white')
 var6.place(x=50+152, y=337+116)
 
-#label7=Label(root, text="점유중인 저장공간")
-#label7.place(x=30, y=153)
+# 점유중인 저장공간
 var7=Label(root, textvariable=util_cap, font=font2, border=0, bg='white')
 var7.place(x=50+152, y=337+153)
 
-#label8=Label(root, text="총 읽기량")
-#label8.place(x=30, y=190)
+# 총 읽기량
 var8=Label(root, textvariable=data_read, font=font2, border=0, bg='white')
 var8.place(x=50+152, y=337+190)
 
-#label9=Label(root, text="총 쓰기량")
-#label9.place(x=30, y=227)
+# 총 쓰기량
 var9=Label(root, textvariable=data_write, font=font2, border=0, bg='white')
 var9.place(x=50+152, y=337+227)
 
-#label10=Label(root, text="가동 시간")
-#label10.place(x=30, y=264)
+# 가동 시간
 var10=Label(root, textvariable=power_hours, font=font2, border=0, bg='white')
 var10.place(x=50+152, y=337+264)
 
-#label11=Label(root, text="사용 횟수")
-#label11.place(x=30, y=301)
+# 사용 횟수
 var11=Label(root, textvariable=cycles, font=font2, border=0, bg='white')
 var11.place(x=50+152, y=337+301)
 
@@ -233,9 +272,6 @@ def pathChange(*event):
         list.insert("end", file) # end : 목록의 마지막에 이어 붙이기. // 원본 : list.insert(0, file)
                     
     # 만약 파일의 숨김 속성('h')이 1이라면 listbox 상에서 하이라이트 처리.
-    # 프로그램 처음 실행시에는 정상적으로 작동하는데, 경로를 이동하면 함수 자체는 거치는데 하이라이트가 안되는 현상 발생. 버그 수정 필요합니다.
-    # 프로그램 처음 실행시에는 정상적으로 작동하는데, 경로를 이동하면 함수 자체는 거치는데 하이라이트가 안되는 현상 발생. 버그 수정 필요합니다.
-    # 프로그램 처음 실행시에는 정상적으로 작동하는데, 경로를 이동하면 함수 자체는 거치는데 하이라이트가 안되는 현상 발생. 버그 수정 필요합니다.
     for file in directory:
         if(has_hidden_attribute(file) == 1) :
             print("Found a hidden one     @ " + str(count))
@@ -262,6 +298,7 @@ def file_magician():
     else :
         hide_file(picked)
         print("Selected file is now hidden.")
+    pathChange()
         
 def hide_file(filepath):
     subprocess.check_call(["attrib", "+H", filepath])
@@ -297,9 +334,9 @@ def open_popup():
     top.resizable(False, False)
     top.title("Child Window")
     top.columnconfigure(0, weight=1)
-    Label(top, text='Enter File or Folder name').place(x=0, y=0, relx=0.5)
-    Entry(top, textvariable=newFileName).place(x=0, y=50, relx=0.5, relwidth=0.8)
-    Button(top, text="Create", command=newFileOrFolder).place(x=0, y=100, relx=0.5)
+    Label(top, text='Enter File or Folder name').place(x=0, y=0)
+    Entry(top, textvariable=newFileName).place(x=0, y=50, relwidth=0.8)
+    Button(top, text="Create", command=newFileOrFolder).place(x=0, y=100)
 
 def newFileOrFolder():
     # check if it is a file name or a folder
@@ -327,12 +364,12 @@ currentPath.trace('w', pathChange)
 # Frame3 : File Explorer (button, path, listBox)
 
 button_img1 = PhotoImage(file='img/upButton.png')
-Button(root, text='Folder Up', command=goBack, relief='flat', image=button_img1, bg='#BBFFE7', activebackground='#BBFFE7').place(x=654, y=135)
+Button(root, command=goBack, border=0, image=button_img1, bg='#BBFFE7', activebackground='#BBFFE7').place(x=654, y=145)
 
 # Keyboard shortcut for going up
 root.bind("<Alt-Up>", goBack)
 font4 = Font(family="Inter", weight='bold', size = 12)
-Entry(root, font=font4, textvariable=currentPath, width=40, border=0, bg='black', fg='white').place(x=770, y=147)
+Entry(root, font=font4, textvariable=currentPath, width=40, border=0, bg='black', fg='white').place(x=770, y=157)
 
 # List of files and folder
 list = Listbox(root, width=60, height=21, relief='flat')
@@ -342,18 +379,38 @@ list.place(x=765, y=212)
 list.bind('<Double-1>', changePathByClick)
 list.bind('<Return>', changePathByClick)
 
-# Menu
-menubar = Menu(root)
-# change directory
-menubar.add_command(label="C: drive", command=changeDirToC)
-menubar.add_command(label="D: drive", command=changeDirToD)
-# Adding a new File button
-menubar.add_command(label="Add File or Folder", command=open_popup)
-menubar.add_command(label="(un)Hide File", command=file_magician)
-# Adding a quit button to the Menubar
-menubar.add_command(label="Quit", command=root.quit)
-# Make the menubar the Main Menu
-root.config(menu=menubar)
+
+cButton = PhotoImage(file='img/cButton.png')
+Button(root, command=changeDirToC, border=0, 
+        image=cButton, bg='#D9D9D9', activebackground='#D9D9D9').place(x=72, y=11)
+
+dButton = PhotoImage(file='img/dButton.png')
+Button(root, command=changeDirToD, border=0, 
+        image=dButton, bg='#D9D9D9', activebackground='#D9D9D9').place(x=192, y=11)
+
+addButton = PhotoImage(file='img/add.png')
+Button(root, command=open_popup, border=0, 
+        image=addButton, bg='#D9D9D9', activebackground='#D9D9D9').place(x=765, y=11)
+
+
+
+
+hideButton = PhotoImage(file='img/hide.png')
+Button(root, command=file_magician, border=0, 
+        image=hideButton, bg='#D9D9D9', activebackground='#D9D9D9').place(x=880, y=11)
+
+#def detect():
+#    result = subprocess.call(["python", "kicomav-master/Release/k2.py", "img", "-r"], shell=True)
+#detectButton = PhotoImage(file='img/detectButton.png')
+#Button(root, command=detect, border=0, 
+#        image=detectButton, bg='#BBFFE7', activebackground='#D9D9D9').place(x=654, y=83)
+
+quitButton = PhotoImage(file='img/quit.png')
+Button(root, command=root.quit, border=0, 
+        image=quitButton, bg='#D9D9D9', activebackground='#D9D9D9').place(x=1212, y=15)
+
+
+
 
 
 changeDirToC()
