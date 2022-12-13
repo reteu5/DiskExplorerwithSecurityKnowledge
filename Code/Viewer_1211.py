@@ -279,6 +279,10 @@ def pathChange(*event):
             list.itemconfig(count, {'bg' : 'khaki1'})
         print(count)
         count += 1
+    
+    checkLabel.configure(image='')
+    foldersLabel.configure(text='')
+    filesLabel.configure(text='')
         
 def has_hidden_attribute(filepath):
     # 원본 코드(아래 코드가 작동 안 할 경우 이걸로 교체) : return bool(os.stat(filepath).st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN)
@@ -422,15 +426,29 @@ def detect():
     folders = line_[0]
     files = line_[1]
     check = int(line_[2])
-    print(type(check), check)
+    if check == 0:
+        checkLabel.configure(image=check_ok)
+    else:
+        checkLabel.configure(image=check_notok)
+    
+    foldersLabel.configure(text='폴더: ' + folders)
+    filesLabel.configure(text='파일: ' + files)
 
 
+check_ok = PhotoImage(file='img/ok.png')
+check_notok = PhotoImage(file='img/notok.png')
+checkLabel = Label(root, border=0, bg='#BBFFE7')
+checkLabel.place(x=938, y=83)
 
-
+font6 = Font(family="Inter", weight='bold', size = 10)
+foldersLabel = Label(root, border=0, bg='#BBFFE7', font=font6)
+foldersLabel.place(x=993, y=87)
+filesLabel = Label(root, border=0, bg='#BBFFE7', font=font6)
+filesLabel.place(x=993, y=110)
 
 detectButton = PhotoImage(file='img/detectButton.png')
 Button(root, command=detect, border=0, 
-        image=detectButton, bg='#BBFFE7', activebackground='#D9D9D9').place(x=654, y=78)
+        image=detectButton, bg='#BBFFE7', activebackground='#BBFFE7').place(x=654, y=78)
 
 quitButton = PhotoImage(file='img/quit.png')
 Button(root, command=root.quit, border=0, 
