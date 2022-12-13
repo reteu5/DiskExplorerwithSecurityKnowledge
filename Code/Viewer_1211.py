@@ -56,7 +56,7 @@ def changeDirToC(event=None):
         elif int(tmp2[0]) > 30:
             temperCel.configure(image=yellowCel)
             var5.configure(bg='#F1F451')
-        elif int(tmp2[0]) < 30:
+        elif int(tmp2[0]) <= 30:
             temperCel.configure(image=blueCel)
             var5.configure(bg='#7DA9FD')
         else:
@@ -91,7 +91,7 @@ def changeDirToD(event=None):
         elif int(tmp2[0]) > 30:
             temperCel.configure(image=yellowCel)
             var5.configure(bg='#F1F451')
-        elif int(tmp2[0]) < 30:
+        elif int(tmp2[0]) <= 30:
             temperCel.configure(image=blueCel)
             var5.configure(bg='#7DA9FD')
         else:
@@ -393,17 +393,44 @@ Button(root, command=open_popup, border=0,
         image=addButton, bg='#D9D9D9', activebackground='#D9D9D9').place(x=765, y=11)
 
 
-
-
 hideButton = PhotoImage(file='img/hide.png')
 Button(root, command=file_magician, border=0, 
         image=hideButton, bg='#D9D9D9', activebackground='#D9D9D9').place(x=880, y=11)
 
-#def detect():
-#    result = subprocess.call(["python", "kicomav-master/Release/k2.py", "img", "-r"], shell=True)
-#detectButton = PhotoImage(file='img/detectButton.png')
-#Button(root, command=detect, border=0, 
-#        image=detectButton, bg='#BBFFE7', activebackground='#D9D9D9').place(x=654, y=83)
+
+
+def zerofill():
+    picked = list.get(list.curselection()[0])
+    path = os.path.join(currentPath.get(), picked)
+    result = subprocess.call(["python", "Zero Filling.py", path], shell=True)
+
+delButton = PhotoImage(file='img/delButton.png')
+Button(root, command=zerofill, border=0, 
+        image=delButton, bg='#D9D9D9', activebackground='#D9D9D9').place(x=995, y=11)
+
+
+
+def detect():
+    result1 = subprocess.run(["build.bat", "erase"], shell=True)
+    result2 = subprocess.run(["build.bat", "build"], shell=True)
+    result3 = subprocess.call(["python", "kicomav-master/Release/k2.py", currentPath.get(), "-R", "-I"], shell=True)
+    
+    f = open("log.txt", 'r')
+    line = f.readline()
+    f.close()
+    line_ = line.split(' ')
+    folders = line_[0]
+    files = line_[1]
+    check = int(line_[2])
+    print(type(check), check)
+
+
+
+
+
+detectButton = PhotoImage(file='img/detectButton.png')
+Button(root, command=detect, border=0, 
+        image=detectButton, bg='#BBFFE7', activebackground='#D9D9D9').place(x=654, y=78)
 
 quitButton = PhotoImage(file='img/quit.png')
 Button(root, command=root.quit, border=0, 

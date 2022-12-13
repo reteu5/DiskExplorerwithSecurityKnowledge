@@ -1107,6 +1107,13 @@ def main():
             ret = kav.get_result()
             print_result(ret)
 
+            # 파일로 저장
+            f = open("log.txt", 'w')
+            f.write(str(ret['Folders']) + " ")
+            f.write(str(ret['Files']) + " ")
+            f.write(str(ret['Infected_files']))
+            f.close
+
     kav.uninit()
 
 
